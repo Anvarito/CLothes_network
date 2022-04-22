@@ -907,7 +907,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Rubashka
+  m_Text: Body
 --- !u!222 &887592040
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1323,7 +1323,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Obuv
+  m_Text: Boots
 --- !u!222 &1241845513
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1402,7 +1402,7 @@ Canvas:
   serializedVersion: 3
   m_RenderMode: 1
   m_Camera: {fileID: 963194227}
-  m_PlaneDistance: 1
+  m_PlaneDistance: 0.21
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
   m_OverrideSorting: 0
@@ -1410,7 +1410,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 147
   m_TargetDisplay: 0
 --- !u!224 &1261978597
 RectTransform:
@@ -1743,7 +1743,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Shtani
+  m_Text: Pants
 --- !u!222 &1933665266
 CanvasRenderer:
   m_ObjectHideFlags: 0
