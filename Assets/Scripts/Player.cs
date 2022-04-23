@@ -165,7 +165,7 @@ public class Player : MonoBehaviour
 
     private void CharacterAnimation()
     {
-        bool isWalk = _input.move != Vector2.zero;
+        bool isWalk = _input.move != Vector2.zero && _controller.isGrounded;
         _animator.SetBool(_animIDwalk, isWalk);
     }
     private void CameraRotation()
