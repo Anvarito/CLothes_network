@@ -34,8 +34,8 @@ public class Player : MonoBehaviour
     private float _targetRotation = 0.0f;
     private float _rotationVelocity;
     private Vector3 _targetDirection;
-    private float _verticalVelocity = 0;
-    private Vector3 _downVector;
+    private Vector3 _downVector = new Vector3(0, -4f, 0);
+    private Vector3 _gravity;
 
     [Space(1)]
     [Header("Camera")]
@@ -102,7 +102,6 @@ public class Player : MonoBehaviour
 
     private void CharacterMoving()
     {
-        _verticalVelocity = _controller.isGrounded ? 0 : -4f;
 
         if (_input.move != Vector2.zero)
         {
@@ -118,8 +117,8 @@ public class Player : MonoBehaviour
             _targetDirection = Vector3.zero;
         }
 
-        _downVector = new Vector3(0, _verticalVelocity, 0);
-        _controller.Move(((_targetDirection.normalized * PlayerSpeed) + _downVector) * Time.deltaTime);
+        _gravity = _controller.isGrounded ? Vector3.zero : _downVector;
+        _controller.Move(((_targetDirection.normalized * PlayerSpeed) + _gravity) * Time.deltaTime);
     }
 
     private void CharacterAnimation()
