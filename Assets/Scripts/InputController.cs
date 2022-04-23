@@ -8,6 +8,8 @@ public class InputController : MonoBehaviour
     public Vector2 move { get; private set; }
     public Vector2 look { get; private set; }
 
+    public bool jump;
+
     private PlayerInput inputs;
     private void OnEnable()
     {
@@ -28,6 +30,12 @@ public class InputController : MonoBehaviour
 
         inputs.Player.Look.performed += context => look = context.ReadValue<Vector2>();
         inputs.Player.Look.canceled += context => look = Vector2.zero;
+
+        inputs.Player.Jump.performed += context => Jump();
     }
 
+    private void Jump()
+    {
+        jump = true;
+    }
 }

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
+using System;
 
 [RequireComponent(typeof(CharacterController))]
 [RequireComponent(typeof(InputController))]
@@ -10,6 +11,7 @@ public class Player : MonoBehaviour
     private PhotonView _photonView;
     private Animator _animator;
     private int _animIDwalk;
+    private int _animIDjump;
 
     [Header("Game elements")]
     [SerializeField] private GameObject topNaked;
@@ -34,8 +36,8 @@ public class Player : MonoBehaviour
     private float _targetRotation = 0.0f;
     private float _rotationVelocity;
     private Vector3 _targetDirection;
-    private Vector3 _downVector = new Vector3(0, -4f, 0);
-    private Vector3 _gravity;
+    private float _verticalVelocity;
+    public float JumpHeight;
 
     [Space(1)]
     [Header("Camera")]
@@ -54,8 +56,15 @@ public class Player : MonoBehaviour
         _input = GetComponent<InputController>();
         _controller = GetComponent<CharacterController>();
         _animator = GetComponent<Animator>();
-        _animIDwalk = Animator.StringToHash("walk");
         _mainCamera = Camera.main.gameObject;
+
+        AssignAnimHash();
+    }
+
+    private void AssignAnimHash()
+    {
+        _animIDwalk = Animator.StringToHash("walk");
+        _animIDjump = Animator.StringToHash("jump");
     }
 
     // Update is called once per frame
@@ -64,9 +73,11 @@ public class Player : MonoBehaviour
         if (_photonView.IsMine)
         {
             CharacterMoving();
+            CharecterJumping();
             CharacterAnimation();
         }
     }
+
 
     private void LateUpdate()
     {
@@ -100,6 +111,37 @@ public class Player : MonoBehaviour
         _isBottomNaked = !_isBottomNaked;
     }
 
+    private void CharecterJumping()
+    {
+        float gravity = Physics.gravity.y;
+
+        if (_controller.isGrounded)
+        {
+            _animator.SetBool(_animIDjump, false);
+
+            if (_verticalVelocity < 0.0f)
+            {
+                _verticalVelocity = -2f;
+            }
+
+            if (_input.jump)
+            {
+                _verticalVelocity = Mathf.Sqrt(JumpHeight * -2 * gravity);
+                _animator.SetBool(_animIDjump, true);
+            }
+        }
+        else
+        {
+            _input.jump = false;
+        }
+
+        // apply gravity over time if under terminal (multiply by delta time twice to linearly speed up over time)
+        if (_verticalVelocity < 53)
+        {
+            _verticalVelocity += gravity * Time.deltaTime;
+        }
+    }
+
     private void CharacterMoving()
     {
 
@@ -110,15 +152,15 @@ public class Player : MonoBehaviour
             float rotation = Mathf.SmoothDampAngle(transform.eulerAngles.y, _targetRotation, ref _rotationVelocity, RotationSmoothTime);
 
             transform.rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
-           _targetDirection = Quaternion.Euler(0.0f, _targetRotation, 0.0f) * Vector3.forward;
+            _targetDirection = Quaternion.Euler(0.0f, _targetRotation, 0.0f) * Vector3.forward;
         }
         else
         {
             _targetDirection = Vector3.zero;
         }
 
-        _gravity = _controller.isGrounded ? Vector3.zero : _downVector;
-        _controller.Move(((_targetDirection.normalized * PlayerSpeed) + _gravity) * Time.deltaTime);
+        Vector3 gravity = new Vector3(0, _verticalVelocity, 0);
+        _controller.Move((_targetDirection.normalized * PlayerSpeed + gravity) * Time.deltaTime);
     }
 
     private void CharacterAnimation()

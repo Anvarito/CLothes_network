@@ -3224,6 +3224,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4fdfd0b34c704b249bb63e2da87bae73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  jump: 0
 --- !u!114 &2539439085906923507
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3244,6 +3245,7 @@ MonoBehaviour:
   bottomDressed: {fileID: 2538671313721944392}
   RotationSmoothTime: 0.12
   PlayerSpeed: 1.8
+  JumpHeight: 1
   CameraAngleOverride: 10
   CinemachineCameraTarget: {fileID: 2539439084312828799}
 --- !u!114 &-318459946048145710
