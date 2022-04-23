@@ -33,6 +33,9 @@ public class Player : MonoBehaviour
     private CharacterController _controller;
     private float _targetRotation = 0.0f;
     private float _rotationVelocity;
+    private Vector3 _targetDirection;
+    private float _verticalVelocity = 0;
+    private Vector3 _downVector;
 
     [Space(1)]
     [Header("Camera")]
@@ -97,21 +100,26 @@ public class Player : MonoBehaviour
         _isBottomNaked = !_isBottomNaked;
     }
 
-
     private void CharacterMoving()
     {
-        Vector3 inputDirection = new Vector3(_input.move.x, 0.0f, _input.move.y).normalized;
+        _verticalVelocity = _controller.isGrounded ? 0 : -4f;
 
         if (_input.move != Vector2.zero)
         {
+            Vector3 inputDirection = new Vector3(_input.move.x, 0.0f, _input.move.y).normalized;
             _targetRotation = Mathf.Atan2(inputDirection.x, inputDirection.z) * Mathf.Rad2Deg + _mainCamera.transform.eulerAngles.y;
             float rotation = Mathf.SmoothDampAngle(transform.eulerAngles.y, _targetRotation, ref _rotationVelocity, RotationSmoothTime);
 
             transform.rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
-
-            Vector3 targetDirection = Quaternion.Euler(0.0f, _targetRotation, 0.0f) * Vector3.forward;
-            _controller.Move(targetDirection.normalized * PlayerSpeed * Time.deltaTime);
+           _targetDirection = Quaternion.Euler(0.0f, _targetRotation, 0.0f) * Vector3.forward;
         }
+        else
+        {
+            _targetDirection = Vector3.zero;
+        }
+
+        _downVector = new Vector3(0, _verticalVelocity, 0);
+        _controller.Move(((_targetDirection.normalized * PlayerSpeed) + _downVector) * Time.deltaTime);
     }
 
     private void CharacterAnimation()
